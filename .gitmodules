@@ -1,3 +1,0 @@
-[submodule "library/ansible-known_hosts"]
-	path = library/ansible-known_hosts
-	url = https://github.com/brycebaril/ansible-known_hosts.git

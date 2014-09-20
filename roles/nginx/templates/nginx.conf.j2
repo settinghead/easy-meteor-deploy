@@ -20,7 +20,8 @@ http {
 
     access_log /var/log/nginx/access.log;
     error_log /var/log/nginx/error.log;
-
+    server_names_hash_bucket_size 128;
+    
     ### Gzip Settings
     gzip on;
     gzip_disable "msie6";
@@ -30,7 +31,7 @@ http {
     # gzip_buffers 16 8k;
     # gzip_http_version 1.1;
     # gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
-    
+
     ### Virtual Host Configs
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;

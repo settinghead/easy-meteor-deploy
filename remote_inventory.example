@@ -1,0 +1,1 @@
+remote ansible_ssh_host=example.org ansible_ssh_port=22

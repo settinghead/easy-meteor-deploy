@@ -1,0 +1,10 @@
+---
+- name: Meteor server using local mongoDB
+  hosts: all
+  roles:
+    - common
+    - nginx
+    - mongo
+    - nodejs
+    - meteor
+    - deploy_app

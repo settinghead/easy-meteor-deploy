@@ -1,0 +1,5 @@
+---
+- name: Meteor server using local mongoDB - App only
+  hosts: all
+  roles:
+    - deploy_app

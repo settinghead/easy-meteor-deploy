@@ -28,7 +28,7 @@
 
   - name: build app
     sudo: yes
-    shell: chdir={{ deploy_app_dir }}/app meteor build ../build -p {{ cordova_host }}
+    shell: chdir={{ deploy_app_dir }}/app meteor build ../build --server {{ cordova_host }}
 
   - name: unbundle app
     sudo: yes

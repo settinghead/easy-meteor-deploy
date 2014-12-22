@@ -7,5 +7,4 @@
     sudo: yes
     npm: name={{ item }} global=yes state=present
     with_items:
-      - meteorite
       - forever

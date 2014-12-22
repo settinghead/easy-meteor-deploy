@@ -3,44 +3,68 @@
     sudo: yes
     file: name={{ item }} state=directory owner=root group=root
     with_items:
-      - $deploy_dir
-      - $deploy_app_dir
+      - "{{ deploy_dir }}"
+      - "{{ deploy_app_dir }}"
 
   - name: add bitbucket.org to known hosts
     sudo: yes
     known_hosts: host=bitbucket.org state=present
+    when: repo_url != false
 
   - name: add github.com to known hosts
     sudo: yes
     known_hosts: host=github.com state=present
+    when: repo_url != false
 
   - name: copy key files
     sudo: yes
     copy: src=keys/ dest=~/.ssh/ mode=0600
+    when: repo_url != false
 
   - name: clone
     sudo: yes
     git: repo={{ repo_url }} dest={{ deploy_app_dir }} accept_hostkey=yes key_file=/root/.ssh/id_rsa-bitbucket
+    when: repo_url != false
 
   - name: remove current running app
     sudo: yes
     file: path={{ deploy_app_dir }}/build state=absent recurse=no
+    when: repo_url != false
 
   - name: build app
     sudo: yes
-    shell: chdir={{ deploy_app_dir }}/app meteor build ../build --server {{ cordova_host }}
+    shell: chdir={{ deploy_app_dir }} rm .meteor/platforms; meteor build --directory {{ deploy_app_dir }}/build
+    when: repo_url != false
 
-  - name: unbundle app
+  # - name: unbundle cloned app
+  #   sudo: yes
+  #   shell: chdir={{ deploy_app_dir }}/build tar -xzvf {{ app_name }}.tar.gz
+  #   when: repo_url != false
+
+  - name: ensure {{ deploy_dir }}/build exists
     sudo: yes
-    shell: chdir={{ deploy_app_dir }}/build tar -xzvf app.tar.gz
+    file: name={{ item }} state=directory owner=root group=root
+    with_items:
+      - "{{deploy_app_dir}}/build"
+    when: bundle_path != false
+
+  - name: unbundle
+    sudo: yes
+    shell: chdir={{ deploy_app_dir }}/build tar -xzvf {{ bundle_path }}
+    when: bundle_path != false
 
   - name: install npm modules for unbundled apps
     sudo: yes
-    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ npm install
+    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ rm -rf node_modules; npm install
 
   - name: patch install fibers
     sudo: yes
     shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ mkdir node_modules || true; cd node_modules; rm -rf fibers; npm install fibers@1.0.1
+
+  - name: patch install bcrypt
+    sudo: yes
+    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/npm/npm-bcrypt rm -rf node_modules/bcrypt; npm install bcrypt@0.7.7
+
 
   - name: register the current pids
     sudo: yes

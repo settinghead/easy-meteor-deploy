@@ -2,6 +2,7 @@
 
 app_name: example_app
 repo_url: https://github.com/example_hacker/example_app.git
+bundle_path: false
 domain_name: www.example.org
 
 #########################################################
@@ -19,7 +20,7 @@ nginx_upstream_server: "127.0.0.1:{{ port }}"
 
 nginx_server_listen: 0.0.0.0:80
 nginx_server_log: /var/log/nginx/meteor.log
-nginx_server_root: "{{ deploy_app_dir}}/app"
+nginx_server_root: "{{ deploy_app_dir}}"
 nginx_server_index: index.html index.htm
 nginx_server_proxy_pass: "http://{{ app_name }}/"
 

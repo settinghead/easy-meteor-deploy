@@ -8,9 +8,9 @@
     apt: pkg={{ item }} state=present
     with_items:
       - python-software-properties
-      - python 
-      - g++ 
-      - make 
+      - python
+      - g++
+      - make
 
   - name: add Chris Lea's nodejs ppa
     sudo: yes

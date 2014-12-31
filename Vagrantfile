@@ -19,9 +19,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network :forwarded_port,
-    guest: 80,
-    host: 8080,
-    auto_correct: true
+  guest: 80,
+  host: 8080,
+  auto_correct: true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -58,13 +58,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provision VM with Ansible,
   # http://www.ansibleworks.com/docs/intro_getting_started.html
   #
-  config.vm.provision :ansible do |ansible|
-    # Ansible playbook in project directory
-    # ansible.playbook = "server-meteor-gridkick.yml"
-
-    ansible.playbook = "server-meteor-full.yml"
-
-    # Inventory file
-    # ansible.inventory_path = "provision/ansible_hosts"
-  end
+  # config.vm.provision :ansible do |ansible|
+  #   # Ansible playbook in project directory
+  #   # ansible.playbook = "server-meteor-gridkick.yml"
+  #
+  #   ansible.playbook = "docker.yml"
+  #
+  #   # Inventory file
+  #   # ansible.inventory_path = "provision/ansible_hosts"
+  # end
 end

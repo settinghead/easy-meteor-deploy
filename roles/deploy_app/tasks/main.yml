@@ -57,14 +57,9 @@
     sudo: yes
     shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ rm -rf node_modules; npm install
 
-  - name: patch install fibers
-    sudo: yes
-    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ mkdir node_modules || true; cd node_modules; rm -rf fibers; npm install fibers@1.0.1
-
-  - name: patch install bcrypt
-    sudo: yes
-    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/npm/npm-bcrypt rm -rf node_modules/bcrypt; npm install bcrypt@0.7.7
-
+  # - name: patch install fibers
+  #   sudo: yes
+  #   shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ mkdir node_modules || true; cd node_modules; rm -rf fibers; npm install fibers@1.0.1
 
   - name: register the current pids
     sudo: yes

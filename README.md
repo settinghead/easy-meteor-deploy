@@ -33,9 +33,9 @@ The best way to create your own deployment repo that derives from this repo is t
 mkdir my-deploy; cd my-deploy
 git init
 git remote add easy-remote https://github.com/settinghead/easy-meteor-deploy.git
+git fetch easy-remote
 git checkout -b easy easy-remote/master
 git checkout master
-git add -A .
 git read-tree -m -u easy
 ```
 

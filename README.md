@@ -5,6 +5,12 @@ __Ansible deployment scripts that help you quickly set up a production-ready met
 
 __Work derived from [westonplatter](https://github.com/westonplatter/example_meteor_deploy)'s [example_meteor_deploy](https://github.com/westonplatter/example_meteor_deploy).__
 
+### Philosophy
+
+Hiding details from user does not necessarily make their lives easier. It often leads to leaky abstraction.
+
+Easy-deploy aims a providing a set of tools, so that you know the strength of each of them, and can customize and chain them together at easy.
+
 ### Dependencies
 * VirtualBox
 * Vagrant

@@ -1,0 +1,12 @@
+---
+- name: Meteor server using local mongoDB - App only
+  hosts: all
+  vars_files:
+    - ./vars/server_addresses/_default.yml
+     #must specify branch from environment variable
+    - ./vars/server_addresses/{{ lookup('env','ENV') }}.yml
+    - ./vars/main.yml
+  roles:
+    - mongo_docker
+    - deploy_app
+    - app_nginx

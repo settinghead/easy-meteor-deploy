@@ -1,0 +1,22 @@
+---
+
+#########################################################
+
+# root_url: "http://{{ server_domain_name }}"
+# cordova_host: "{{ server_domain_name }}:80"
+# deploy_dir: /var/www
+# deploy_app_dir: "/var/www/{{ app_name }}"
+# mongo_port: 27017
+# mongo_url: "mongodb://localhost:{{ mongo_port }}/{{ app_name}}"
+# repo_remote: true
+# port: 8003
+# nginx_upstream_name: "{{ app_name }}"
+# nginx_upstream_server: "127.0.0.1:{{ port_internal }}"
+#
+# nginx_server_listen: 0.0.0.0:80
+# nginx_server_log: /var/log/nginx/meteor.log
+# nginx_server_root: "{{ deploy_app_dir}}"
+# nginx_server_index: index.html index.htm
+# nginx_server_proxy_pass: "http://{{ app_name }}/"
+#
+# pid_expression: "/var/www/{{ app_name }}/build/bundle/main.js"

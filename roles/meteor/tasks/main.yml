@@ -5,5 +5,10 @@
     with_items:
       - forever
 
+  - shell: which meteor
+    register: meteor_path
+    ignore_errors: True
+
   - name: install meteor
     shell: curl https://install.meteor.com | /bin/sh
+    when: meteor_path == ""

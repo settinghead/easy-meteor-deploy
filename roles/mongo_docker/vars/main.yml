@@ -1,0 +1,4 @@
+---
+mongo_bind_ips: 127.0.0.1
+mongo_version: 2.4.11
+docker_image_def_path: /etc/docker_images/{{ app_name }}

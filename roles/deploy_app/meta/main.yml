@@ -1,0 +1,4 @@
+---
+dependencies:
+  #disabled, until we have a proper meteor ansible script
+  # - { role: meteor }

@@ -1,0 +1,10 @@
+---
+# configuration for master branch
+
+server:
+  public:
+    address: "123.57.145.162"
+  internal:
+    address: 127.0.0.1
+  mongodb:
+    address: 127.0.0.1

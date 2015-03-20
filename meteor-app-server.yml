@@ -1,5 +1,0 @@
----
-- name: Meteor App
-  hosts: all
-  roles:
-    - meteor

@@ -1,0 +1,15 @@
+---
+# default variables to be shared across environments
+
+server:
+  public:
+#   address: [required in inherited config]
+    protocol: "http"
+    port: 80
+  internal:
+    address: "app-internal"
+    protocol: "http"
+    port: 8002
+  mongodb:
+    port: 27027
+    address: "app-mongo-internal"

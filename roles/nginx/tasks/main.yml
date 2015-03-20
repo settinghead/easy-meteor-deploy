@@ -2,6 +2,7 @@
   - name: add nginx ppa
     sudo: yes
     apt_repository: repo='ppa:nginx/stable'
+    when: false # temporarily disable
 
   - name: update apt-get
     sudo: yes

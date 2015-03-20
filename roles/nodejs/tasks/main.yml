@@ -1,21 +1,33 @@
+# Install Node.js using packages crafted by NodeSource
 ---
-  - name: update apt packages
-    sudo: yes
-    apt: update_cache=yes cache_valid_time=3600
+- name: Ensure the system can use the HTTPS transport for APT
+  sudo: yes
+  stat: path=/usr/lib/apt/methods/https
+  register: apt_https_transport
 
-  - name: install nodejs requirements
-    sudo: yes
-    apt: pkg={{ item }} state=present
-    with_items:
-      - python-software-properties
-      - python
-      - g++
-      - make
+- name: Install HTTPS transport for APT
+  sudo: yes
+  apt: pkg=apt-transport-https state=installed
+  when: not apt_https_transport.stat.exists
 
-  - name: add Chris Lea's nodejs ppa
-    sudo: yes
-    apt_repository: repo='ppa:chris-lea/node.js'
+- name: Import the NodeSource GPG key into apt
+  sudo: yes
+  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
 
-  - name: install nodejs
-    sudo: yes
-    apt: pkg=nodejs update_cache=yes
+- name: Add NodeSource deb repository
+  sudo: yes
+  apt_repository: repo='deb https://deb.nodesource.com/node {{ ansible_distribution_release }} main' state=present
+
+- name: Add NodeSource deb-src repository
+  sudo: yes
+  apt_repository: repo='deb-src https://deb.nodesource.com/node {{ ansible_distribution_release }} main' state=present
+
+- name: Add NodeSource repository preferences
+  sudo: yes
+  template:
+    src: deb_nodesource_com_node.pref.2
+    dest: /etc/apt/preferences.d/deb_nodesource_com_node.pref
+
+- name: Install Node.js
+  sudo: yes
+  apt: name=nodejs=0.10.37-1nodesource1~trusty1 state=installed update_cache=yes

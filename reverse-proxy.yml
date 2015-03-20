@@ -1,6 +1,0 @@
----
-- name: Reverse Proxy
-  hosts: all
-  sudo: yes
-  roles:
-    - nginx

@@ -3,20 +3,20 @@
 app_name: example_app
 repo_url: https://github.com/example_hacker/example_app.git
 bundle_path: false
-domain_name: www.example.org
+server_domain_name: www.example.org
 
 #########################################################
 
 repo_version: master
-root_url: "http://{{ domain_name }}"
-cordova_host: "{{ domain_name }}:80"
+root_url: "http://{{ server_domain_name }}"
+cordova_host: "{{ server_domain_name }}:80"
 deploy_dir: /var/www
 deploy_app_dir: "/var/www/{{ app_name }}"
 mongo_url: "mongodb://localhost:27017/{{ app_name}}"
 repo_remote: true
 port: 8003
 nginx_upstream_name: "{{ app_name }}"
-nginx_upstream_server: "127.0.0.1:{{ port }}"
+nginx_upstream_server: "127.0.0.1:{{ port_internal }}"
 
 nginx_server_listen: 0.0.0.0:80
 nginx_server_log: /var/log/nginx/meteor.log

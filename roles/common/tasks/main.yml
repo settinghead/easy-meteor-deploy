@@ -12,3 +12,4 @@
       - build-essential
       - vim
       - openjdk-7-jdk
+      - python-setuptools

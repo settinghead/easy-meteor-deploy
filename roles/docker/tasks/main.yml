@@ -1,0 +1,168 @@
+---
+# tasks file for docker.ubuntu
+- name: Fail if not a new release of Ubuntu
+  fail:
+    msg: "{{ ansible_distribution_version }} is not an acceptable version of Ubuntu for this role"
+  when: "ansible_distribution_version not in ['12.04', '13.04', '13.10', '14.04', '14.10']"
+
+- name: Install pip
+  sudo: yes
+  easy_install: name=pip
+
+- name: Install raring kernel onto 12.04
+  sudo: yes
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items:
+    - linux-image-generic-lts-raring
+    - linux-headers-generic-lts-raring
+  register: kernel_result
+  when: "ansible_distribution_version == '12.04'"
+
+- name: Install latest kernel extras for Ubuntu 13.04+
+  sudo: yes
+  apt:
+    pkg: "linux-image-extra-{{ ansible_kernel }}"
+    state: "{{ kernel_pkg_state }}"
+    update_cache: yes
+    cache_valid_time: 600
+  when: "ansible_distribution_version == '13.04' or ansible_distribution_version == '13.10'"
+
+# Fix for https://github.com/dotcloud/docker/issues/4568
+- name: Install cgroup-lite for Ubuntu 13.10
+  sudo: yes
+  apt:
+    pkg: cgroup-lite
+    state: "{{ cgroup_lite_pkg_state }}"
+    update_cache: yes
+    cache_valid_time: 600
+  register: cgroup_lite_result
+  when: "ansible_distribution_version == '13.10'"
+
+- name: Reboot instance
+  sudo: yes
+  command: /sbin/shutdown -r now
+  register: reboot_result
+  when: "(ansible_distribution_version == '12.04' and kernel_result|changed)
+      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
+
+- name: Wait for instance to come online (10 minute timeout)
+  sudo: yes
+  local_action:
+    module: wait_for
+    host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
+    port: "{{ ansible_ssh_port|default(ssh_port) }}"
+    delay: 30
+    timeout: 600
+    state: started
+  when: "(ansible_distribution_version == '12.04' and reboot_result|changed)
+      or (ansible_distribution_version == '13.10' and cgroup_lite_result|changed)"
+
+- name: Add Docker repository key
+  sudo: yes
+  apt_key:
+    id: "{{ apt_key_sig }}"
+    url: "{{ apt_key_url }}"
+    state: present
+
+- name: Add Docker repository and update apt cache
+  sudo: yes
+  apt_repository:
+    repo: "{{ apt_repository }}"
+    update_cache: yes
+    state: present
+
+- name: Install (or update) docker package
+  sudo: yes
+  apt:
+    name: "{{ docker_pkg_name }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+
+- name: Expose docker host
+  sudo: yes
+  copy:
+    content: "DOCKER_OPTS=\"{{ docker_opts }}\""
+    dest: /etc/default/docker
+    owner: root
+    group: root
+    mode: 0744
+  notify:
+    - Reload docker
+  when: "export_docker_host"
+
+- name: Fix DNS in docker.io
+  sudo: yes
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "DOCKER_OPTS="
+    line: 'DOCKER_OPTS="--dns {{ ansible_docker0.ipv4.address }}"'
+  register: dns_fix
+  notify: Restart dockerio
+  when: docker_pkg_name == 'docker.io'
+
+- meta: flush_handlers
+  when: "dns_fix|changed"
+
+- pause:
+    seconds: 1
+  when: "dns_fix|changed"
+
+# - name: Install pip python package
+#   sudo: yes
+#   apt:
+#     pkg: "{{ item }}"
+#     state: latest
+#     update_cache: yes
+#     cache_valid_time: 600
+#   with_items:
+#     - python-dev
+
+- name: Install Docker-py
+  sudo: yes
+  pip:
+    name: docker-py
+
+- name: Check if /etc/updatedb.conf exists
+  sudo: yes
+  stat:
+    path: /etc/updatedb.conf
+  register: updatedb_conf_exists
+
+- name: Ensure updatedb does not index /var/lib/docker
+  sudo: yes
+  shell: >
+    ex -s -c '/PRUNEPATHS=/v:/var/lib/docker:s:"$: /var/lib/docker"' -c 'wq' /etc/updatedb.conf
+  when: updatedb_conf_exists.stat.exists
+
+- name: Check if /etc/default/ufw exists
+  sudo: yes
+  stat:
+    path: /etc/default/ufw
+  register: ufw_default_exists
+
+- name: Change ufw default forward policy from drop to accept
+  sudo: yes
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^DEFAULT_FORWARD_POLICY="
+    line: "DEFAULT_FORWARD_POLICY=\"ACCEPT\""
+  when: ufw_default_exists.stat.exists
+
+- name: Start docker-lxc
+  sudo: yes
+  service:
+    name: docker
+    state: started
+  when: docker_pkg_name == 'lxc-docker'
+
+- name: Start docker.io
+  sudo: yes
+  service:
+    name: docker.io
+    state: started
+  when: docker_pkg_name == 'docker.io'

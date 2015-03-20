@@ -31,11 +31,6 @@
     file: path={{ deploy_app_dir }}/build state=absent recurse=no
     when: repo_url != false
 
-  - name: build app
-    sudo: yes
-    shell: chdir={{ deploy_app_dir }} rm .meteor/platforms; meteor build --directory {{ deploy_app_dir }}/build
-    when: repo_url != false
-
   # - name: unbundle cloned app
   #   sudo: yes
   #   shell: chdir={{ deploy_app_dir }}/build tar -xzvf {{ app_name }}.tar.gz
@@ -55,11 +50,40 @@
 
   - name: install npm modules for unbundled apps
     sudo: yes
-    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ rm -rf node_modules; npm install
+    shell: chdir={{ deploy_app_dir }}/build/bundle/programs/server/ rm -rf node_modules; npm install
 
-  # - name: patch install fibers
-  #   sudo: yes
-  #   shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ mkdir node_modules || true; cd node_modules; rm -rf fibers; npm install fibers@1.0.1
+  - name: patch install fibers
+    sudo: yes
+    shell: chdir={{ deploy_app_dir}}/build/bundle/programs/server/ mkdir node_modules || true; cd node_modules; rm -rf fibers; npm install fibers@1.0.1
+
+  - name: copy settings.json
+    sudo: yes
+    template: src="settings.json.j2"
+              dest="{{ deploy_app_dir }}/settings.json"
+              owner=root
+              group=root
+
+  - name: copy settings.json to tmp
+    sudo: yes
+    template: src="settings.json.j2"
+              dest="/tmp/settings.json"
+              owner=root
+              group=root
+
+  - name: ensure json-minify is installed
+    sudo: yes
+    npm: name={{ item }} global=yes state=present
+    with_items:
+      - json-minify
+
+  - name: register settings.json variable
+    sudo: yes
+    shell: cat {{ deploy_app_dir }}/settings.json
+    register: meteor_settings_str
+
+  - name: restart nginx
+    sudo: yes
+    service: name=nginx state=restarted
 
   - name: register the current pids
     sudo: yes
@@ -73,27 +97,14 @@
 
   - name: start app with forever
     sudo: yes
+    # environment:
+    #   METEOR_SETTINGS: "{{ meteor_settings_str.stdout }}"
     shell:  >
-      PORT={{ port }}
+      PORT={{ port_internal }}
       MONGO_URL={{ mongo_url }}
       ROOT_URL={{ root_url }}
+      DEBUG=*
+      METEOR_SETTINGS=$(json-minify {{ deploy_app_dir }}/settings.json)
       forever start "{{ deploy_app_dir }}"/build/bundle/main.js
     async: 10
     poll: 1
-
-  - name: copy nginx virtual host file
-    sudo: yes
-    template: src="app.j2"
-              dest="/etc/nginx/sites-available/{{app_name}}"
-              owner=root
-              group=root
-
-  - name: link nginx virtual host file
-    sudo: yes
-    file: src="/etc/nginx/sites-available/{{app_name}}"
-          dest="/etc/nginx/sites-enabled/{{app_name}}"
-          state=link
-
-  - name: restart nginx
-    sudo: yes
-    service: name=nginx state=restarted

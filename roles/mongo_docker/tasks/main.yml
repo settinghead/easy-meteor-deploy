@@ -1,0 +1,29 @@
+---
+
+- name: ensure {{ docker_image_def_path }}/mongodb exists
+  sudo: yes
+  file: name={{ item }} state=directory owner=root group=root
+  with_items:
+    - "{{ docker_image_def_path }}/mongodb"
+
+- name: ensure /data/{{ app_name }} exists
+  sudo: yes
+  file: name={{ item }} state=directory owner=root group=root
+  with_items:
+    - "/data/{{ app_name }}"
+
+- name: copy Dockerfile
+  sudo: yes
+  template: src=Dockerfile.j2 dest={{ docker_image_def_path }}/mongodb/Dockerfile owner=root group=root
+
+- name: check or build mongodb image
+  sudo: yes
+  docker_image: path="{{ docker_image_def_path }}/mongodb" name="mongodb-secure" state=present
+
+- name: Eliminate previous mongodb docker container
+  sudo: yes
+  docker: image="mongodb-secure" name="{{ app_name }}" state=absent
+
+- name: Start mongodb docker container
+  sudo: yes
+  docker: image="mongodb-secure" volumes="/data/{{ app_name }}:/data/db" name="{{ app_name }}" state=running detach=true expose=27017 ports={{ mongo_port }}:27017

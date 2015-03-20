@@ -1,0 +1,4 @@
+- name: build app
+  shell: cd {{ app_dir }}; meteor --get-ready; meteor build {{ dist_path }} --server {{ protocol_public }}://{{ address_public }}:{{ port_public }} --architecture os.linux.x86_64
+- name: copy app to remote temp folder
+  shell: cd {{ app_dir }}; scp -P {{ ansible_ssh_port }} {{ dist_path }}/app.tar.gz {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/tmp/{{ app_name }}.tar.gz

@@ -1,10 +1,9 @@
 ---
-- name: Meteor server using local mongoDB
+- name: Meteor app using Dockerized mongoDB - Setup only
   hosts: all
+  serial: 1
   roles:
     - common
     - nginx
-    - mongo
     - nodejs
     - meteor
-    - deploy_app

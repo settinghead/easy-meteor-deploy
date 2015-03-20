@@ -7,13 +7,24 @@ upstream {{ nginx_upstream_name }} {
   server {{ nginx_upstream_server }};
 }
 
+# server {
+#  listen         {{ nginx_server_listen_insecure }};
+#  server_name    {{ address_public }};
+#  return         301 https://$server_name$request_uri;
+# }
+
 server {
+
+  # ssl on;
+  # ssl_certificate {{ nginx_ssl_cert_path }};
+  # ssl_certificate_key {{ nginx_ssl_key_path }};
+
   listen      {{ nginx_server_listen }};
   access_log  {{ nginx_server_log }};
   root        {{ nginx_server_root }};
   index       {{ nginx_server_index }};
 
-  server_name {{ domain_name }};
+  server_name {{ address_public }};
 
   location / {
     rewrite /(.*) /$1 break;

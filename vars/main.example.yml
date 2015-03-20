@@ -1,0 +1,42 @@
+---
+
+app_name: badass_awesome_app
+server_domain_name: xxx.xxx.xxx.xxx
+
+#########################################################
+
+server_port: 80
+server_protocol: "http"
+# repo_url: git+ssh://git@github.com:settinghead/qizhi.git
+# bundle_path: false
+repo_url: false
+# bundle_path: false # either apath, or false
+bundle_path: /tmp/{{ app_name }}.tar.gz
+address_public: "{{ server.public.address | default('localhost') }}"
+protocol_public: "{{ server.public.protocol | default('http') }}"
+port_public: "{{ server.public.port | default('80') }}"
+address_internal: "{{ server.internal.address }}"
+port_internal: "{{ server.internal.port }}"
+mongo_port: "{{ server.mongodb.port | default('localhost') }}"
+mongo_address: "{{ server.mongodb.address | default('27017') }}"
+app_db_name: "{{ server.mongodb.db_name | default('null') }}"
+
+#########################################################
+
+root_url: "{{ protocol_public }}://{{ address_public }}:{{ port_public }}"
+deploy_dir: /var/www
+deploy_app_dir: "/var/www/{{ app_name }}"
+mongo_url: "mongodb://{{ mongo_address }}:{{ mongo_port }}/{{ app_db_name }}"
+nginx_upstream_name: "{{ app_name }}"
+nginx_upstream_server: "{{ address_internal }}:{{ port_internal }}"
+protocol_internal: "{{ server.internal.protocol | default('http') }}"
+
+nginx_server_listen_insecure: "0.0.0.0:80"
+nginx_server_listen: "0.0.0.0:{{ port_public }}"
+nginx_server_log: /var/log/nginx/{{ app_name }}.log
+nginx_server_root: "{{ deploy_app_dir }}"
+nginx_server_index: index.html index.htm
+nginx_server_proxy_pass: "{{ protocol_internal }}://{{ app_name }}/"
+nginx_ssl_cert_path: "/etc/nginx/ssl/nginx.crt"
+nginx_ssl_key_path: "/etc/nginx/ssl/nginx.key"
+pid_expression: "/var/www/{{ app_name }}/build/bundle/main.js"

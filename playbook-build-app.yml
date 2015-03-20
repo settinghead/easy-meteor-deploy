@@ -1,0 +1,13 @@
+---
+- name: "Build app"
+  vars:
+   app_name: qizhi
+   dist_path: "../dist"
+   app_dir: "../app"
+  hosts: all
+  vars_files:
+    - ./vars/server_addresses/_default.yml
+    - ./vars/server_addresses/{{ lookup('env','ENV') }}.yml
+    - ./vars/main.yml
+  roles:
+    - build_app

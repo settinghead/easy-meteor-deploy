@@ -1,0 +1,10 @@
+---
+# deploy to a vagrant instance
+
+server:
+  public:
+    address: "127.0.0.1"
+  internal:
+    address: "127.0.0.1"
+  mongodb:
+    address: "127.0.0.1"

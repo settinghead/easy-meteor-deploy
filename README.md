@@ -5,12 +5,6 @@ __Ansible deployment scripts that help you quickly set up a production-ready met
 
 __Work derived from [westonplatter](https://github.com/westonplatter/example_meteor_deploy)'s [example_meteor_deploy](https://github.com/westonplatter/example_meteor_deploy).__
 
-### Philosophy
-
-Hiding details from user does not necessarily make their lives easier. It often leads to leaky abstraction.
-
-Easy-deploy aims a providing a set of tools, so that you know the strength of each of them, and can customize and chain them together at easy.
-
 ### Dependencies
 * VirtualBox
 * Vagrant
@@ -22,8 +16,8 @@ Easy-deploy aims a providing a set of tools, so that you know the strength of ea
 ### Usage
 
 1. Clone this repository: ```git clone http://github.com/settinghead/easy-meteor-deploy.git```
-3. Copy ```roles/deploy_app/vars/main.example.yml``` as ```roles/deploy_app/vars/main.yml```
-4. In ```roles/deploy_app/vars/main.yml```, change ```app_name```, ```repo_url``` and ```domain_name``` to your own values.
+3. Copy ```/vars/main.example.yml``` as ```/vars/main.yml```
+4. In ```/vars/main.yml```, change ```app_name```, ```repo_url``` and ```domain_name``` to your own values.
 5. Copy ```remote_inveontory.example``` as ```remote_inveontory```, and replace ```example.org``` in ```remote_inveontory``` with your own domain
 6. Make sure your SSH key is properly set up to access your remote host
 7. Run the following script to set up software required to run your Meteor app and deploy your app:

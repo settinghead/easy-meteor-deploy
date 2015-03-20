@@ -3,7 +3,10 @@ easy-meteor-deploy
 
 __Ansible deployment scripts that help you quickly set up a production-ready meteor website on either a Ubuntu host or a Local Vagrant instance.__
 
-__Work derived from [westonplatter](https://github.com/westonplatter/example_meteor_deploy)'s [example_meteor_deploy](https://github.com/westonplatter/example_meteor_deploy).__
+## WARNING: README File Outdated
+
+I'm actively working on a new version of easy-deploy. The README file below no longer applies. Please check back soon.
+
 
 ### Dependencies
 * VirtualBox
@@ -11,7 +14,7 @@ __Work derived from [westonplatter](https://github.com/westonplatter/example_met
 * Ansible
 
 ### Assumptions
-- You have a git repository for your Meteor app and the app is in the root of your repository.
+- You have a git repository for your Meteor app and the app is in the `/app` folder of your repository.
 
 ### Usage
 
@@ -49,3 +52,5 @@ git pull
 git checkout master
 git merge --squash -s subtree --no-commit easy
 ```
+
+__Work derived from [westonplatter](https://github.com/westonplatter/example_meteor_deploy)'s [example_meteor_deploy](https://github.com/westonplatter/example_meteor_deploy).__

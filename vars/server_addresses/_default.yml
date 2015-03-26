@@ -9,7 +9,7 @@ server:
   internal:
     address: "app-internal"
     protocol: "http"
-    port: 8002
+    port: 8102
   mongodb:
     port: 27027
     address: "app-mongo-internal"

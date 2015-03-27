@@ -3,7 +3,7 @@
 
 server:
   public:
-    address: "123.57.145.162"
+    address: "qz-sg.settinghead.info"
   internal:
     address: 127.0.0.1
   mongodb:

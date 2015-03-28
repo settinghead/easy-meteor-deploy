@@ -30,4 +30,4 @@
 
 - name: Install Node.js
   sudo: yes
-  apt: name=nodejs=0.10.37-1nodesource1~trusty1 state=installed update_cache=yes
+  apt: name=nodejs=0.10.38-1chl1~trusty1 state=installed update_cache=yes

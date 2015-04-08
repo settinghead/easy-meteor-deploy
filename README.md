@@ -22,11 +22,11 @@ Use [Vagrant](https://www.vagrantup.com) and fire `vagrant up` to test.
 
 ```yaml
   - name: install meteor
-    hosts: webservers
+    hosts: servers
     vars:
       meteor_version: "1.1.0.2"
     roles:
-      - meteor
+      - carlos.acp.meteor
 ```
 
 #### Thanks to

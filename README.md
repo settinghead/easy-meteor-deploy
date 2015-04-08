@@ -20,6 +20,14 @@ Use [Vagrant](https://www.vagrantup.com) and fire `vagrant up` to test.
 
 ### Example Playbook
 
+  * Install ansible-meteor using galaxy
+
+```bash
+  ansible-galaxy install carlos.acp.meteor
+```
+
+  * Add to your playbook
+
 ```yaml
   - name: install meteor
     hosts: servers

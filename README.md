@@ -1,1 +1,38 @@
-# ansible-meteor
+## Ansible Meteor
+
+Simple way to add meteor instalation on your ansible tasks
+
+### Requirements
+
+
+  * Tested on ansible 1.4
+
+### Variables
+
+
+```yaml
+  meteor_version: "1.1.0.2"  #default version
+```
+
+### Testing
+
+Use [Vagrant](https://www.vagrantup.com) and fire `vagrant up` to test.
+
+### Example Playbook
+
+```yaml
+  - name: install meteor
+    hosts: webservers
+    vars:
+      meteor_version: "1.1.0.2"
+    roles:
+      - meteor
+```
+
+#### Thanks to
+- [Paulo Hecht](https://github.com/thehecht)
+- [Jonathan Freedman](https://github.com/otakup0pe) for [ANXS-nodejs](https://github.com/ANXS/nodejs)
+
+### License
+
+Licensed under the MIT License. See the LICENSE file for details.

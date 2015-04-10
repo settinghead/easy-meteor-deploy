@@ -4,7 +4,7 @@
   vars_files:
     - ./vars/server_addresses/_default.yml
      #must specify branch from environment variable
-    - ./vars/server_addresses/{{ lookup('env','ENV') }}.yml
+    - ./vars/server_addresses/{{ lookup('env','ENV') | default('master') }}.yml
     - ./vars/main.yml
   roles:
     - mongo_docker

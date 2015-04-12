@@ -1,8 +1,8 @@
 ---
 - name: "Build app"
   vars:
-   dist_path: "../dist"
-   app_dir: "../app"
+   dist_path: ".dist"
+   app_dir: ".."
   hosts: all
   vars_files:
     - ./vars/server_addresses/_default.yml

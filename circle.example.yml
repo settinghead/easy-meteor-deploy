@@ -1,0 +1,26 @@
+machine:
+  node:
+    version: 0.10.36
+dependencies:
+  pre:
+    # - cd ../; git clone git://github.com/ansible/ansible.git --recursive; cd ./ansible; git checkout git clone git://github.com/ansible/ansible.git#de52cfb5d7437e84442e47714eadb6a8758a6fb4; source ./hacking/env-setup
+    - sudo apt-get install software-properties-common
+    - sudo apt-add-repository ppa:ansible/ansible -y
+    - sudo apt-get update
+    - sudo apt-get install ansible
+    - curl https://install.meteor.com/ | sh
+test:
+  override:
+    # - meteor run --test
+    - echo "no test"
+  post:
+    # - meteor build ../dist/ --server https://recontext.org --architecture os.linux.x86_64
+    - cd .deploy; ENV=$CIRCLE_BRANCH ansible-playbook -i server-inventories/$CIRCLE_BRANCH playbook-build-app.yml --connection=local
+deployment:
+  production:
+    branch: master
+    commands:
+      - cd .deploy; ENV=$CIRCLE_BRANCH ansible-playbook -i server-inventories/$CIRCLE_BRANCH playbook-app-only.yml
+general:
+  artifacts:
+    - ./dist/app.tar.gz

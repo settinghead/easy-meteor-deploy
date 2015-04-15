@@ -1,1 +1,1 @@
-remote ansible_ssh_host=example.org ansible_ssh_port=22
+remote ansible_ssh_host=example.org ansible_ssh_port=22 ansible_ssh_user=root

@@ -19,7 +19,7 @@ address_internal: "{{ server.internal.address }}"
 port_internal: "{{ server.internal.port }}"
 mongo_port: "{{ server.mongodb.port | default('27017') }}"
 mongo_address: "{{ server.mongodb.address | default('localhost') }}"
-app_db_name: "{{ server.mongodb.address | default(app_name) }}"
+app_db_name: "{{ server.mongodb.db | default(app_name) }}"
 
 #########################################################
 

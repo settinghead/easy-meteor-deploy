@@ -1,0 +1,22 @@
+---
+  
+  - name: meteor | verify if meteor is already installed
+    command: meteor --version
+    ignore_errors: yes
+    register: mtr_version
+    changed_when: mtr_version.rc != 0 or mtr_version.stdout != "Meteor {{ meteor_version }}"
+
+  - name: get meteor installer
+    get_url:
+      url=https://install.meteor.com/
+      dest=/tmp/meteor.sh
+      mode=0440
+    when: mtr_version.changed and mtr_version.rc != 0
+
+  - name: Install meteor
+    command: /bin/sh /tmp/meteor.sh
+    when: mtr_version.changed and mtr_version.rc != 0
+
+  - name: Update Meteor
+    command: "meteor update --release {{ meteor_version }}"
+    when: mtr_version.rc == 0 and mtr_version.changed and mtr_version.stdout != "Meteor {{ meteor_version }}"

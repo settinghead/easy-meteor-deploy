@@ -6,5 +6,6 @@ server:
     address: "127.0.0.1"
   internal:
     address: "127.0.0.1"
+    port: 8002
   mongodb:
     address: "127.0.0.1"

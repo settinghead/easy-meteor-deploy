@@ -126,6 +126,7 @@
   sudo: yes
   pip:
     name: docker-py
+    version: 1.1.0
 
 - name: Check if /etc/updatedb.conf exists
   sudo: yes
